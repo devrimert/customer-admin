@@ -21,9 +21,11 @@ public sealed class CustomerService(CustomerAdminDbContext db)
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            // ILIKE: case-insensitive in PostgreSQL
-            var pattern = $"%{EscapeLikePattern(search.Trim())}%";
-            query = query.Where(c => EF.Functions.ILike(c.Name, pattern));
+            // Finds customers by their own name or by the name of one of their contacts
+            var pattern = SearchPatterns.Contains(search);
+            query = query.Where(c =>
+                EF.Functions.ILike(c.Name, pattern) ||
+                c.Contacts.Any(x => EF.Functions.ILike(x.FirstName + " " + x.LastName, pattern)));
         }
 
         // Projection: only the needed columns; the contact count becomes a COUNT subquery
@@ -134,10 +136,4 @@ public sealed class CustomerService(CustomerAdminDbContext db)
         customer.City = request.City.NullIfEmpty();
         customer.Note = request.Note.NullIfEmpty();
     }
-
-    /// <summary>
-    /// Escapes LIKE wildcards, so a search for "50%" does not match everything.
-    /// </summary>
-    private static string EscapeLikePattern(string value) =>
-        value.Replace(@"\", @"\\").Replace("%", @"\%").Replace("_", @"\_");
 }
