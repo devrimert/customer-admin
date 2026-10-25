@@ -22,7 +22,7 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
             // Deactivating (IsActive = false) is the normal, reversible way to hide a customer.
             .OnDelete(DeleteBehavior.Cascade);
 
-                // Regular index for loading the contacts of a customer
+        // Regular index for loading the contacts of a customer
         builder.HasIndex(c => c.CustomerId, "ix_contacts_customer_id")
             .HasDatabaseName("ix_contacts_customer_id");
 

@@ -17,6 +17,14 @@ builder.Services.AddDbContext<CustomerAdminDbContext>(options =>
 
 var app = builder.Build();
 
+// Apply pending migrations on startup
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CustomerAdminDbContext>();
+    await db.Database.MigrateAsync();
+}
+
+
 if (app.Environment.IsDevelopment())
 {
     // Serves the generated OpenAPI document at /openapi/v1.json
