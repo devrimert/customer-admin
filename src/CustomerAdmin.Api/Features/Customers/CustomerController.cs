@@ -9,7 +9,10 @@ namespace CustomerAdmin.Api.Features.Customers;
 [Produces("application/json")]
 public sealed class CustomerController(CustomerService customers) : ControllerBase
 {
-    /// <summary>Lists customers sorted by name. Inactive customers are hidden unless requested.</summary>
+    /// <summary>
+    /// Lists customers sorted by name. Inactive customers are hidden unless requested.
+    /// The search matches the customer name and the names of its contacts.
+    /// </summary>
     [HttpGet]
     public Task<IReadOnlyList<CustomerSummaryResponse>> GetList(
         [FromQuery] string? search,
