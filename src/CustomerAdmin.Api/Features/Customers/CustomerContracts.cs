@@ -51,7 +51,9 @@ public sealed record CustomerSummaryResponse(
     string? Email,
     string? Phone,
     bool IsActive,
-    int ContactCount);
+    int ContactCount,
+    DateTime CreatedAt,
+    DateTime? UpdatedAt);
 
 /// <summary>A customer with all fields and its contacts, primary contact first.</summary>
 public sealed record CustomerDetailResponse(
