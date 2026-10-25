@@ -1,7 +1,6 @@
 using CustomerAdmin.Api.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
 
 namespace CustomerAdmin.Api.Features.Customers;
 
@@ -10,8 +9,6 @@ namespace CustomerAdmin.Api.Features.Customers;
 [Produces("application/json")]
 public sealed class CustomerController(CustomerService customers) : ControllerBase
 {
-    private const string VersionPath = "/version";
-
     /// <summary>Lists customers sorted by name. Inactive customers are hidden unless requested.</summary>
     [HttpGet]
     public Task<IReadOnlyList<CustomerSummaryResponse>> GetList(
@@ -81,31 +78,9 @@ public sealed class CustomerController(CustomerService customers) : ControllerBa
         JsonPatchDocument<UpdateCustomerRequest> patch,
         CancellationToken cancellationToken)
     {
-        var operations = patch.Operations;
-
-        // Operations run in order, so the version check has to come first.
-        // Paths are case-sensitive (JSON Pointer), "/Version" doesn't count.
-        if (operations.Count == 0 ||
-            operations[0] is not { OperationType: OperationType.Test, path: VersionPath })
+        if (this.CheckOperations(patch) is { } invalidPatch)
         {
-            return Problem(
-                statusCode: StatusCodes.Status428PreconditionRequired,
-                title: "Precondition required",
-                detail: $"The first operation must be a 'test' on '{VersionPath}'.");
-        }
-
-        // We only need "replace". Fewer operations, fewer ways to misuse the endpoint.
-        // The version itself can't be changed by the client.
-        var hasInvalidOperation = operations
-            .Skip(1)
-            .Any(o => o.OperationType != OperationType.Replace || o.path == VersionPath);
-
-        if (hasInvalidOperation)
-        {
-            return Problem(
-                statusCode: StatusCodes.Status422UnprocessableEntity,
-                title: "Unsupported operation",
-                detail: $"Only 'replace' is allowed after the version test, and '{VersionPath}' can't be replaced.");
+            return invalidPatch;
         }
 
         var request = await customers.GetUpdateRequestAsync(id, cancellationToken);
@@ -114,32 +89,9 @@ public sealed class CustomerController(CustomerService customers) : ControllerBa
             return NotFound();
         }
 
-        // We patch a copy, not the entity. If something goes wrong, the copy is thrown away.
-        var errors = new List<JsonPatchError>();
-        patch.ApplyTo(request, errors.Add);
-
-        if (errors.Any(e => e.Operation?.OperationType == OperationType.Test))
+        if (this.ApplyAndValidate(patch, request) is { } patchProblem)
         {
-            return Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Conflict",
-                detail: ProblemMessages.ConcurrencyConflict);
-        }
-
-        if (errors.Count > 0)
-        {
-            return Problem(
-                statusCode: StatusCodes.Status422UnprocessableEntity,
-                title: "Invalid patch",
-                detail: string.Join(" ", errors.Select(e => e.ErrorMessage)));
-        }
-
-        // Same validation rules as PUT
-        if (!TryValidateModel(request))
-        {
-            return ValidationProblem(
-                statusCode: StatusCodes.Status422UnprocessableEntity,
-                modelStateDictionary: ModelState);
+            return patchProblem;
         }
 
         var customer = await customers.UpdateAsync(id, request, cancellationToken);
