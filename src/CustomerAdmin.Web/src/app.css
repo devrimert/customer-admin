@@ -1,0 +1,62 @@
+/* Fixed sidebar on the left, page content on the right */
+.layout {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 1.5rem 1rem;
+  border-right: 1px solid var(--pico-muted-border-color);
+  background: var(--pico-card-background-color);
+}
+
+.sidebar a[aria-current='page'] {
+  font-weight: bold;
+}
+
+.content {
+  padding: 1.5rem 2rem;
+  max-width: 72rem;
+}
+
+/* Search field and checkbox in one row */
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.toolbar input[type='search'] {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.toolbar label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+tr.inactive td {
+  color: var(--pico-muted-color);
+}
+
+/* Label and value side by side */
+.field {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 1rem;
+}
+
+.field dt {
+  color: var(--pico-muted-color);
+  font-weight: normal;
+}
+
+.field dd {
+  margin: 0;
+}

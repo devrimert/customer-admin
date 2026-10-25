@@ -21,6 +21,12 @@ export const de = {
     loading: 'Wird geladen …',
     saving: 'Wird gespeichert …',
     unsavedChanges: 'Es gibt ungespeicherte Änderungen. Wirklich schließen?',
+    empty: '–',
+  },
+
+  notFound: {
+    title: 'Seite nicht gefunden',
+    backToList: 'Zur Kundenliste',
   },
 
   customers: {
@@ -46,6 +52,8 @@ export const de = {
       note: 'Notiz',
       contactCount: 'Ansprechpartner',
       status: 'Status',
+      createdAt: 'Angelegt am',
+      updatedAt: 'Zuletzt geändert',
     },
   },
 
@@ -58,6 +66,7 @@ export const de = {
     makePrimary: 'Als Hauptansprechpartner festlegen',
     confirmDelete: (name: string) => `Ansprechpartner „${name}“ endgültig löschen?`,
     fields: {
+      name: 'Name',
       firstName: 'Vorname',
       lastName: 'Nachname',
       position: 'Position',
