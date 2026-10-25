@@ -15,6 +15,7 @@ export const de = {
   common: {
     save: 'Speichern',
     cancel: 'Abbrechen',
+    close: 'Schließen',
     edit: 'Bearbeiten',
     delete: 'Löschen',
     back: 'Zurück',
@@ -79,7 +80,7 @@ export const de = {
   validation: {
     required: 'Bitte ausfüllen.',
     email: 'Bitte eine gültige E-Mail-Adresse eingeben.',
-    phone: 'Bitte nur Ziffern, Leerzeichen und + - / ( ) verwenden.',
+    phone: 'Bitte mindestens 4 Zeichen, nur Ziffern, Leerzeichen und + - . ( ) verwenden.',
     tooShort: (min: number) => `Mindestens ${min} Zeichen.`,
     tooLong: (max: number) => `Höchstens ${max} Zeichen.`,
   },
