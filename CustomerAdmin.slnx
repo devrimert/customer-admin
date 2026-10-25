@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="CustomerAdmin.Api/CustomerAdmin.Api.csproj" />
+  <Folder Name="/src/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/CustomerAdmin.Api.Tests/CustomerAdmin.Api.Tests.csproj" />
+  </Folder>
+  <Project Path="src/CustomerAdmin.Api/CustomerAdmin.Api.csproj" />
 </Solution>
