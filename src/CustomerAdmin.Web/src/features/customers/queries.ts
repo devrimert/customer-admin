@@ -45,18 +45,23 @@ export function useCreateCustomer() {
 }
 
 export function useUpdateCustomer(id: number) {
+  const queryClient = useQueryClient()
   const refresh = useRefreshCustomers()
   return useMutation({
     mutationFn: (body: UpdateCustomerRequest) => api.updateCustomer(id, body),
+    // Use the answer right away, so the next edit already has the new version
+    onSuccess: (saved) => queryClient.setQueryData(customerKeys.detail(id), saved),
     onSettled: refresh,
   })
 }
 
 export function usePatchCustomer(id: number) {
+  const queryClient = useQueryClient()
   const refresh = useRefreshCustomers()
   return useMutation({
     mutationFn: ({ version, changes }: { version: number; changes: Partial<UpdateCustomerRequest> }) =>
       api.patchCustomer(id, version, changes),
+    onSuccess: (saved) => queryClient.setQueryData(customerKeys.detail(id), saved),
     onSettled: refresh,
   })
 }
