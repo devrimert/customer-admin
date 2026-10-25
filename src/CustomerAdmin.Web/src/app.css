@@ -60,3 +60,98 @@ tr.inactive td {
 .field dd {
   margin: 0;
 }
+
+.sidebar button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Title on the left, buttons on the right */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-header h1 {
+  margin-bottom: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions button {
+  margin-bottom: 0;
+}
+
+/* Small text buttons without a box, e.g. the pencil and the star */
+button.icon {
+  width: auto;
+  margin: 0;
+  padding: 0 0.35rem;
+  border: none;
+  background: none;
+  color: var(--pico-muted-color);
+}
+
+button.icon:hover:not(:disabled) {
+  color: var(--pico-primary);
+}
+
+button.star {
+  color: var(--pico-primary);
+  font-size: 1.1rem;
+}
+
+/* Buttons that look like links, used in table rows */
+button.link {
+  width: auto;
+  margin: 0 0.75rem 0 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--pico-primary);
+  text-decoration: underline;
+}
+
+button.link.danger {
+  color: var(--pico-del-color);
+}
+
+.row-actions {
+  white-space: nowrap;
+}
+
+.inline-edit {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.inline-edit input,
+.inline-edit textarea {
+  width: auto;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  height: auto;
+}
+
+.inline-edit .error {
+  width: 100%;
+  color: var(--pico-del-color);
+}
+
+/* Hidden on screen, still read by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
