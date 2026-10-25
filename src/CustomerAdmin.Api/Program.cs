@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CustomerAdmin.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using CustomerAdmin.Api.Common;
@@ -6,7 +7,11 @@ using CustomerAdmin.Api.Features.Contacts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+// Numbers must be JSON numbers, not strings. This also makes the OpenAPI document
+// describe integers as "integer" only, so the generated TypeScript types are plain numbers.
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.Strict);
+builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
 builder.Services.AddOpenApi();
 
 var connectionString = builder.Configuration.GetConnectionString("Default")
