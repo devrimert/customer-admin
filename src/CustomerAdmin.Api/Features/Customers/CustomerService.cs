@@ -24,8 +24,9 @@ public sealed class CustomerService(CustomerAdminDbContext db)
             // Finds customers by their own name or by the name of one of their contacts
             var pattern = SearchPatterns.Contains(search);
             query = query.Where(c =>
-                EF.Functions.ILike(c.Name, pattern) ||
-                c.Contacts.Any(x => EF.Functions.ILike(x.FirstName + " " + x.LastName, pattern)));
+                EF.Functions.ILike(c.Name, pattern, SearchPatterns.EscapeCharacter) ||
+                c.Contacts.Any(x => EF.Functions.ILike(
+                    x.FirstName + " " + x.LastName, pattern, SearchPatterns.EscapeCharacter)));
         }
 
         // Projection: only the needed columns; the contact count becomes a COUNT subquery
