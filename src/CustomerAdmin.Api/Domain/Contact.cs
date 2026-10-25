@@ -1,5 +1,9 @@
 namespace CustomerAdmin.Api.Domain;
 
+/// <summary>
+/// A contact person at a customer. Contains personal data (GDPR), so contacts can be deleted
+/// individually and are deleted together with their customer.
+/// </summary>
 public class Contact : Entity
 {
     public int CustomerId { get; set; }

@@ -9,10 +9,11 @@ public class Customer : Entity
     public string? PostalCode { get; set; }
     public string? City { get; set; }
     public string? Note { get; set; }
+
     /// <summary>
-    /// Customers are deactivated instead of deleted, so their contacts stay intact.
-    /// A customer is a company and is usually not personal data under the GDPR.
-    /// Contact persons are personal data and are deleted individually (GDPR Art. 17, right to erasure).
+    /// Deactivating is the normal, reversible way to hide a customer.
+    /// Deleting is permanent and also deletes all contacts, for example on a GDPR erasure request.
+    /// A customer is a company and is usually not personal data; its contacts are.
     /// </summary>
     public bool IsActive { get; set; } = true;
 
