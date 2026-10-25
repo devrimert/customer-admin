@@ -15,6 +15,11 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
         builder.Property(c => c.Position).HasMaxLength(100);
         builder.Property(c => c.Note).HasMaxLength(2000);
 
+        // Optimistic concurrency
+        builder.Property(c => c.Version)
+            .IsRowVersion()
+            .HasColumnName("xmin");
+
         builder.HasOne(c => c.Customer)
             .WithMany(c => c.Contacts)
             .HasForeignKey(c => c.CustomerId)
