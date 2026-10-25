@@ -2,6 +2,7 @@ using CustomerAdmin.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using CustomerAdmin.Api.Common;
 using CustomerAdmin.Api.Features.Customers;
+using CustomerAdmin.Api.Features.Contacts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<CustomerAdminDbContext>(options =>
         .UseSnakeCaseNamingConvention());
 
 builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<ContactService>();
 // RFC 9457 problem details for all error responses (validation, 404, 409, unhandled exceptions)
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ConflictExceptionHandler>();
