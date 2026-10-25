@@ -39,7 +39,9 @@ public sealed class CustomerService(CustomerAdminDbContext db)
                 c.Email,
                 c.Phone,
                 c.IsActive,
-                c.Contacts.Count))
+                c.Contacts.Count,
+                c.CreatedAt,
+                c.UpdatedAt))
             .ToListAsync(cancellationToken);
     }
 

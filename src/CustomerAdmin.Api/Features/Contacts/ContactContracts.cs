@@ -52,6 +52,8 @@ public sealed record ContactResponse(
     string? Position,
     string? Note,
     bool IsPrimary,
+    DateTime CreatedAt,
+    DateTime? UpdatedAt,
     uint Version)
 {
     public static ContactResponse From(Contact contact) => new(
@@ -64,5 +66,7 @@ public sealed record ContactResponse(
         contact.Position,
         contact.Note,
         contact.IsPrimary,
+        contact.CreatedAt,
+        contact.UpdatedAt,
         contact.Version);
 }

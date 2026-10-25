@@ -1,39 +1,213 @@
-/* Fixed sidebar on the left, page content on the right */
+/* ---------- Colors and sizes ---------- */
+
+/* Pico sets its light theme on a more specific selector, so ours has to be at least as specific */
+:root[data-theme='light'] {
+  --brand: #c2410c;
+  --brand-dark: #9a3412;
+  --brand-soft: #fff4e6;
+  --brand-border: #f5d9b8;
+  --bar: #1f2933;
+
+  /* Pico uses these for buttons, links and focus rings */
+  --pico-primary: var(--brand);
+  --pico-primary-background: var(--brand);
+  --pico-primary-border: var(--brand);
+  --pico-primary-underline: rgba(194, 65, 12, 0.5);
+  --pico-primary-hover: var(--brand-dark);
+  --pico-primary-hover-background: var(--brand-dark);
+  --pico-primary-hover-border: var(--brand-dark);
+  --pico-primary-focus: rgba(194, 65, 12, 0.25);
+  --pico-primary-inverse: #fff;
+  /* Warm light grey page, so the white tables and cards stand out */
+  --pico-background-color: #f1efec;
+
+  /* A bit smaller and tighter than Pico's default */
+  --pico-font-size: 90%;
+  --pico-spacing: 0.875rem;
+  --pico-form-element-spacing-vertical: 0.5rem;
+  --pico-form-element-spacing-horizontal: 0.75rem;
+}
+
+.content h1 {
+  --pico-font-size: 1.6rem;
+}
+
+.content h2 {
+  --pico-font-size: 1.2rem;
+}
+
+/* ---------- Portfolio bar on top ---------- */
+
+.portfolio-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.4rem 1.5rem;
+  background: var(--bar);
+  color: #e5e7eb;
+  font-size: 0.8rem;
+}
+
+.portfolio-bar nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.portfolio-bar a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.portfolio-bar a:hover {
+  color: #fdba74;
+}
+
+/* ---------- Sidebar and page ---------- */
+
 .layout {
   display: grid;
-  grid-template-columns: 14rem 1fr;
+  /* minmax(0, 1fr): a wide table scrolls inside its card instead of pushing the page wider */
+  grid-template-columns: 15rem minmax(0, 1fr);
   min-height: 100vh;
 }
 
 .sidebar {
   position: sticky;
   top: 0;
+  align-self: start;
   height: 100vh;
-  padding: 1.5rem 1rem;
-  border-right: 1px solid var(--pico-muted-border-color);
-  background: var(--pico-card-background-color);
+  padding: 1.25rem 1rem;
+  background: var(--brand-soft);
+  border-right: 1px solid var(--brand-border);
 }
 
-.sidebar a[aria-current='page'] {
-  font-weight: bold;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  color: var(--bar);
+  font-weight: 600;
+  text-decoration: none;
 }
 
+/* Small logo, looks like the favicon */
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.sidebar nav li {
+  padding: 0;
+  margin-bottom: 0.25rem;
+  list-style: none;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.375rem;
+  color: var(--bar);
+  text-decoration: none;
+}
+
+.sidebar nav a:hover {
+  background: var(--brand-border);
+}
+
+/* NavLink sets aria-current="page" on the active link */
+.sidebar nav a[aria-current='page'] {
+  background: #fff;
+  color: var(--brand);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.new-customer {
+  width: 100%;
+  margin-top: 1rem;
+  transition:
+    background-color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+
+.new-customer:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(194, 65, 12, 0.25);
+}
+
+/* Buttons with an icon in front of the text */
+.new-customer,
+.with-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* The page uses the full width. The padding grows a bit on big screens. */
 .content {
-  padding: 1.5rem 2rem;
-  max-width: 72rem;
+  width: 100%;
+  min-width: 0;
+  padding: 1.75rem clamp(1rem, 3vw, 3rem) 3rem;
 }
 
-/* Search field and checkbox in one row */
+
+/* Title on the left, buttons on the right */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header h1,
+.page-header h2 {
+  margin-bottom: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions button,
+.page-header button {
+  margin-bottom: 0;
+}
+
+/* ---------- Search ---------- */
+
 .toolbar {
   display: flex;
-  gap: 1rem;
   align-items: center;
+  gap: 1rem;
   margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--brand-soft);
+  border: 1px solid var(--brand-border);
+  border-radius: 0.5rem;
 }
 
 .toolbar input[type='search'] {
   flex: 1;
   margin-bottom: 0;
+  background-color: #fff;
 }
 
 .toolbar label {
@@ -41,15 +215,79 @@
   white-space: nowrap;
 }
 
+/* ---------- Tables ---------- */
+
+.table-card {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  border: 1px solid #e7e5e4;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.table-card table {
+  margin: 0;
+}
+
+.table-card th,
+.table-card td {
+  padding: 0.6rem 0.9rem;
+}
+
+.table-card th {
+  background: #f5f5f4;
+  color: #57534e;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.table-card tbody tr:hover td {
+  background: var(--brand-soft);
+}
+
+tr.clickable {
+  cursor: pointer;
+}
+
 tr.inactive td {
   color: var(--pico-muted-color);
 }
+
+.badge {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.badge.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.inactive {
+  background: #e7e5e4;
+  color: #57534e;
+}
+
+/* ---------- Customer details ---------- */
 
 /* Label and value side by side */
 .field {
   display: grid;
   grid-template-columns: 10rem 1fr;
   gap: 1rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.field:hover {
+  background: var(--brand-soft);
 }
 
 .field dt {
@@ -61,70 +299,46 @@ tr.inactive td {
   margin: 0;
 }
 
-.sidebar button {
-  width: 100%;
-  margin-top: 1rem;
-}
+/* ---------- Small buttons ---------- */
 
-/* Title on the left, buttons on the right */
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.page-header h1 {
-  margin-bottom: 0;
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.actions button {
-  margin-bottom: 0;
-}
-
-/* Small text buttons without a box, e.g. the pencil and the star */
+/* Icon buttons without a box: pencil, star, edit, delete */
 button.icon {
+  display: inline-flex;
+  align-items: center;
   width: auto;
   margin: 0;
-  padding: 0 0.35rem;
+  padding: 0.25rem;
   border: none;
+  border-radius: 0.25rem;
   background: none;
   color: var(--pico-muted-color);
 }
 
 button.icon:hover:not(:disabled) {
-  color: var(--pico-primary);
+  background: var(--brand-border);
+  color: var(--brand);
+}
+
+button.icon.danger {
+  color: #b91c1c;
+}
+
+button.icon.danger:hover:not(:disabled) {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 button.star {
-  color: var(--pico-primary);
+  color: var(--brand);
   font-size: 1.1rem;
 }
 
-/* Buttons that look like links, used in table rows */
-button.link {
-  width: auto;
-  margin: 0 0.75rem 0 0;
-  padding: 0;
-  border: none;
-  background: none;
-  color: var(--pico-primary);
-  text-decoration: underline;
-}
-
-button.link.danger {
-  color: var(--pico-del-color);
-}
-
 .row-actions {
+  text-align: right;
   white-space: nowrap;
 }
+
+/* ---------- Inline editing ---------- */
 
 .inline-edit {
   display: inline-flex;
@@ -133,12 +347,24 @@ button.link.danger {
   gap: 0.25rem;
 }
 
+/* The pencil only shows when the mouse is over the field, or when it has keyboard focus */
+.edit-trigger {
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.field:hover .edit-trigger,
+td:hover .edit-trigger,
+.edit-trigger:focus-visible {
+  opacity: 1;
+}
+
 .inline-edit input,
 .inline-edit textarea {
   width: auto;
+  height: auto;
   margin: 0;
   padding: 0.25rem 0.5rem;
-  height: auto;
 }
 
 .inline-edit .error {
@@ -154,4 +380,146 @@ button.link.danger {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* ---------- Delete button ---------- */
+
+button.danger {
+  --pico-background-color: #b91c1c;
+  --pico-border-color: #b91c1c;
+  --pico-color: #fff;
+}
+
+button.danger.outline {
+  --pico-background-color: transparent;
+  --pico-color: #b91c1c;
+}
+
+button.danger.outline:hover:not(:disabled) {
+  --pico-background-color: #fee2e2;
+  --pico-border-color: #991b1b;
+  --pico-color: #991b1b;
+}
+
+/* ---------- Sortable headers ---------- */
+
+/* The header text is a button, so sorting also works with the keyboard */
+button.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+button.sort span {
+  opacity: 0.35;
+  font-size: 0.7rem;
+}
+
+button.sort:hover,
+button.sort.active {
+  color: var(--brand);
+}
+
+button.sort.active span {
+  opacity: 1;
+}
+
+.name-cell {
+  white-space: nowrap;
+}
+
+.name-edit input {
+  width: 9rem;
+}
+
+/* ---------- Dialogs: narrower and more compact than Pico's default ---------- */
+
+dialog > article {
+  width: 100%;
+  max-width: 34rem;
+  --pico-block-spacing-vertical: 1rem;
+  --pico-block-spacing-horizontal: 1.25rem;
+  --pico-spacing: 0.6rem;
+  --pico-form-element-spacing-vertical: 0.4rem;
+}
+
+dialog h3 {
+  --pico-font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+dialog label {
+  font-size: 0.875rem;
+}
+
+dialog footer button {
+  margin-bottom: 0;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 900px) {
+  /* The sidebar becomes a bar on top */
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
+    border-right: none;
+    border-bottom: 1px solid var(--brand-border);
+  }
+
+  .brand {
+    margin-bottom: 0;
+  }
+
+  .sidebar nav ul {
+    display: flex;
+    margin: 0;
+  }
+
+  .sidebar nav li {
+    margin-bottom: 0;
+  }
+
+  .new-customer {
+    width: auto;
+    margin: 0 0 0 auto;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+  }
+
+  .toolbar input[type='search'] {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .portfolio-bar > span {
+    display: none;
+  }
+
+  .field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
 }
