@@ -5,6 +5,16 @@
 export const de = {
   app: {
     title: 'Kundenverwaltung',
+    // Shown in the small logo next to the title
+    initials: 'KV',
+  },
+
+  portfolio: {
+    note: 'Portfolio-Projekt von Devrim Mert Yöyen · Kundenverwaltung mit React, ASP.NET Core und PostgreSQL',
+    links: 'Kontakt',
+    github: 'GitHub',
+    linkedin: 'LinkedIn',
+    mail: 'E-Mail',
   },
 
   nav: {
@@ -23,6 +33,8 @@ export const de = {
     saving: 'Wird gespeichert …',
     unsavedChanges: 'Es gibt ungespeicherte Änderungen. Wirklich schließen?',
     empty: '–',
+    created: 'Angelegt',
+    updated: 'Geändert',
   },
 
   notFound: {

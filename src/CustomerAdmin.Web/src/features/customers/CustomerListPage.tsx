@@ -1,16 +1,48 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { errorMessage } from '../../api/errors'
+import type { CustomerSummary } from '../../api/types'
+import SortableHeader from '../../components/SortableHeader'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
-import { t } from '../../i18n'
+import { useSort } from '../../hooks/useSort'
+import { formatDate, formatDateTime, t } from '../../i18n'
 import { useCustomers } from './queries'
 
+type SortKey = 'name' | 'city' | 'phone' | 'email' | 'contactCount' | 'status' | 'createdAt' | 'updatedAt'
+
+const columns: { key: SortKey; label: string }[] = [
+  { key: 'name', label: t.customers.fields.name },
+  { key: 'city', label: t.customers.fields.city },
+  { key: 'phone', label: t.customers.fields.phone },
+  { key: 'email', label: t.customers.fields.email },
+  { key: 'contactCount', label: t.customers.fields.contactCount },
+  { key: 'status', label: t.customers.fields.status },
+  { key: 'createdAt', label: t.common.created },
+  { key: 'updatedAt', label: t.common.updated },
+]
+
+// Outside the component, so the sort hook gets the same function on every render
+function sortValue(customer: CustomerSummary, key: SortKey) {
+  switch (key) {
+    case 'status':
+      return customer.isActive ? 0 : 1
+    case 'createdAt':
+      return Date.parse(customer.createdAt)
+    case 'updatedAt':
+      return customer.updatedAt ? Date.parse(customer.updatedAt) : null
+    default:
+      return customer[key]
+  }
+}
+
 export default function CustomerListPage() {
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [includeInactive, setIncludeInactive] = useState(false)
   const debouncedSearch = useDebouncedValue(search, 300)
 
-  const { data: customers, isPending, error } = useCustomers(debouncedSearch, includeInactive)
+  const { data, isPending, error } = useCustomers(debouncedSearch, includeInactive)
+  const { sorted: customers, sort, toggle } = useSort(data, sortValue, { key: 'name', direction: 'asc' })
 
   return (
     <>
@@ -39,32 +71,44 @@ export default function CustomerListPage() {
       {customers?.length === 0 && <p>{t.customers.empty}</p>}
 
       {customers && customers.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>{t.customers.fields.name}</th>
-              <th>{t.customers.fields.city}</th>
-              <th>{t.customers.fields.phone}</th>
-              <th>{t.customers.fields.email}</th>
-              <th>{t.customers.fields.contactCount}</th>
-              <th>{t.customers.fields.status}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers.map((customer) => (
-              <tr key={customer.id} className={customer.isActive ? undefined : 'inactive'}>
-                <td>
-                  <Link to={`/customers/${customer.id}`}>{customer.name}</Link>
-                </td>
-                <td>{customer.city}</td>
-                <td>{customer.phone}</td>
-                <td>{customer.email}</td>
-                <td>{customer.contactCount}</td>
-                <td>{customer.isActive ? t.customers.active : t.customers.inactive}</td>
+        <div className="table-card">
+          <table>
+            <thead>
+              <tr>
+                {columns.map((column) => (
+                  <SortableHeader key={column.key} label={column.label} sortKey={column.key} sort={sort} onSort={toggle} />
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {customers.map((customer) => (
+                // The whole row opens the customer. The name stays a real link for keyboard and screen readers.
+                <tr
+                  key={customer.id}
+                  className={customer.isActive ? 'clickable' : 'clickable inactive'}
+                  onClick={() => navigate(`/customers/${customer.id}`)}
+                >
+                  <td>
+                    <Link to={`/customers/${customer.id}`}>{customer.name}</Link>
+                  </td>
+                  <td>{customer.city}</td>
+                  <td>{customer.phone}</td>
+                  <td>{customer.email}</td>
+                  <td>{customer.contactCount}</td>
+                  <td>
+                    <span className={customer.isActive ? 'badge active' : 'badge inactive'}>
+                      {customer.isActive ? t.customers.active : t.customers.inactive}
+                    </span>
+                  </td>
+                  <td title={formatDateTime(customer.createdAt)}>{formatDate(customer.createdAt)}</td>
+                  <td title={customer.updatedAt ? formatDateTime(customer.updatedAt) : undefined}>
+                    {customer.updatedAt ? formatDate(customer.updatedAt) : t.common.empty}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </>
   )

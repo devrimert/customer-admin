@@ -2,6 +2,7 @@ import { useState, type KeyboardEvent } from 'react'
 import type { ZodType } from 'zod'
 import { errorMessage } from '../api/errors'
 import { t } from '../i18n'
+import { PencilIcon } from './Icons'
 
 type InlineEditProps = {
   label: string
@@ -58,8 +59,18 @@ export default function InlineEdit({ label, value, schema, type = 'text', multil
     return (
       <span className="inline-edit">
         <span className="value">{value || t.common.empty}</span>
-        <button type="button" className="icon" title={t.common.edit} aria-label={`${label}: ${t.common.edit}`} onClick={start}>
-          ✎
+        <button
+          type="button"
+          className="icon edit-trigger"
+          title={t.common.edit}
+          aria-label={`${label}: ${t.common.edit}`}
+          onClick={(e) => {
+            // In the customer list the row is clickable, the pencil should not open the customer
+            e.stopPropagation()
+            start()
+          }}
+        >
+          <PencilIcon size={14} />
         </button>
       </span>
     )

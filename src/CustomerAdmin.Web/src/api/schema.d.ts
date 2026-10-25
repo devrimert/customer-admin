@@ -703,6 +703,10 @@ export interface components {
             position: null | string;
             note: null | string;
             isPrimary: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: null | string;
             /** Format: uint32 */
             version: number;
         };
@@ -747,6 +751,10 @@ export interface components {
             isActive: boolean;
             /** Format: int32 */
             contactCount: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: null | string;
         };
         JsonPatchDocument: ({
             /** @enum {string} */

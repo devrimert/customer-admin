@@ -68,7 +68,7 @@ export default function CustomerDetailPage() {
 
       <div className="page-header">
         <h1>
-          {customer.name} {!customer.isActive && <mark>{t.customers.inactive}</mark>}
+          {customer.name} {!customer.isActive && <span className="badge inactive">{t.customers.inactive}</span>}
         </h1>
         <div className="actions">
           <button type="button" className="secondary outline" onClick={() => setEditing(true)}>
@@ -83,7 +83,7 @@ export default function CustomerDetailPage() {
           >
             {customer.isActive ? t.customers.deactivate : t.customers.activate}
           </button>
-          <button type="button" className="contrast outline" onClick={deleteCustomer} disabled={remove.isPending}>
+          <button type="button" className="danger outline" onClick={deleteCustomer} disabled={remove.isPending}>
             {t.common.delete}
           </button>
         </div>
