@@ -1,5 +1,7 @@
 using CustomerAdmin.Api.Data;
 using Microsoft.EntityFrameworkCore;
+using CustomerAdmin.Api.Common;
+using CustomerAdmin.Api.Features.Customers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,11 @@ builder.Services.AddDbContext<CustomerAdminDbContext>(options =>
         .UseNpgsql(connectionString)
         .UseSnakeCaseNamingConvention());
 
+builder.Services.AddScoped<CustomerService>();
+// RFC 9457 problem details for all error responses (validation, 404, 409, unhandled exceptions)
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ConflictExceptionHandler>();
+
 var app = builder.Build();
 
 // Apply pending migrations on startup
@@ -24,6 +31,7 @@ await using (var scope = app.Services.CreateAsyncScope())
     await db.Database.MigrateAsync();
 }
 
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

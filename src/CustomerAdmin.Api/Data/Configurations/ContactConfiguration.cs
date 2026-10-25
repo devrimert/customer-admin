@@ -34,9 +34,9 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
         // Partial unique index: at most one primary contact per customer.
         // Only rows with is_primary = true are part of the index.
         // The database name is set explicitly: the API maps a violation of this index to a 409 response.
-        builder.HasIndex(c => c.CustomerId, "ux_contacts_one_primary_per_customer")
+        builder.HasIndex(c => c.CustomerId, DatabaseNames.OnePrimaryContactPerCustomer)
             .IsUnique()
             .HasFilter("is_primary")
-            .HasDatabaseName("ux_contacts_one_primary_per_customer");
+            .HasDatabaseName(DatabaseNames.OnePrimaryContactPerCustomer);
     }
 }
