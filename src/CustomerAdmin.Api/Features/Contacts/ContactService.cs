@@ -26,7 +26,8 @@ public sealed class ContactService(CustomerAdminDbContext db)
         if (!string.IsNullOrWhiteSpace(search))
         {
             var pattern = SearchPatterns.Contains(search);
-            query = query.Where(c => EF.Functions.ILike(c.FirstName + " " + c.LastName, pattern));
+            query = query.Where(c => EF.Functions.ILike(
+                c.FirstName + " " + c.LastName, pattern, SearchPatterns.EscapeCharacter));
         }
 
         var contacts = await query

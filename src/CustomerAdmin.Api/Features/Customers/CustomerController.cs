@@ -6,7 +6,6 @@ namespace CustomerAdmin.Api.Features.Customers;
 
 [ApiController]
 [Route("api/customers")]
-[Produces("application/json")]
 public sealed class CustomerController(CustomerService customers) : ControllerBase
 {
     /// <summary>

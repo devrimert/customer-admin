@@ -6,7 +6,6 @@ namespace CustomerAdmin.Api.Features.Contacts;
 
 [ApiController]
 [Route("api/customers/{customerId:int}/contacts")]
-[Produces("application/json")]
 public sealed class ContactController(ContactService contacts) : ControllerBase
 {
     /// <summary>Lists the contacts of a customer, primary contact first. The search matches first and last name.</summary>

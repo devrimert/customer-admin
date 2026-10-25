@@ -17,7 +17,6 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore src/CustomerAdmin.slnx
-
+        run: dotnet restore 
       - name: Build
-        run: dotnet build src/CustomerAdmin.slnx --no-restore --configuration Release -warnaserror
+        run: dotnet build --no-restore --configuration Release -warnaserror
