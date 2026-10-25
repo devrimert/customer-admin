@@ -16,6 +16,11 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.City).HasMaxLength(100);
         builder.Property(c => c.Note).HasMaxLength(2000);
 
+        // Optimistic concurrency
+        builder.Property(c => c.Version)
+            .IsRowVersion()
+            .HasColumnName("xmin");
+
         // The customer list is sorted by name
         builder.HasIndex(c => c.Name);
     }

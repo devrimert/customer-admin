@@ -12,4 +12,9 @@ public abstract class Entity
 
     /// <summary>Set automatically by the DbContext on every update (UTC).</summary>
     public DateTime? UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Row version for optimistic concurrency. Mapped to the PostgreSQL system column xmin
+    /// </summary>
+    public uint Version { get; set; }
 }
