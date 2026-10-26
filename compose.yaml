@@ -17,5 +17,28 @@ services:
       timeout: 3s
       retries: 10
 
+  api:
+    build: ./src/CustomerAdmin.Api
+    ports:
+      # Only for Swagger, the web app talks to the API through nginx
+      - "${API_PORT:-8081}:8080"
+    environment:
+      # A local demo setup, so Swagger is on. A real deployment would run as Production.
+      ASPNETCORE_ENVIRONMENT: Development
+      # Adds demo customers, but only if the database has no customers yet
+      SeedSampleData: "true"
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=${POSTGRES_DB:-customer_admin};Username=${POSTGRES_USER:-customer_admin};Password=${POSTGRES_PASSWORD}"
+    depends_on:
+      # The API runs the migrations on startup, so the database has to be ready first
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./src/CustomerAdmin.Web
+    ports:
+      - "${WEB_PORT:-8080}:8080"
+    depends_on:
+      - api
+
 volumes:
   db_data:
