@@ -24,3 +24,28 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build --configuration Release
+
+  frontend:
+    name: Frontend lint and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/CustomerAdmin.Web
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: src/CustomerAdmin.Web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # tsc checks the types, then Vite builds
+      - name: Build
+        run: npm run build
