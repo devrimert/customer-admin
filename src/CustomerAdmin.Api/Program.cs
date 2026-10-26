@@ -36,6 +36,12 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<CustomerAdminDbContext>();
     await db.Database.MigrateAsync();
+
+    // Demo data for the Docker setup, see compose.yaml
+    if (app.Configuration.GetValue<bool>("SeedSampleData"))
+    {
+        await SampleData.SeedAsync(db);
+    }
 }
 
 app.UseExceptionHandler();
